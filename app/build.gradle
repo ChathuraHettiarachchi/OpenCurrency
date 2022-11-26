@@ -77,4 +77,7 @@ dependencies {
 
     // network x - connectivity listener
     implementation 'com.github.rommansabbir:NetworkX:4.1.0'
+
+    // preferences
+    implementation 'com.chibatching.kotpref:kotpref:2.13.1'
 }
