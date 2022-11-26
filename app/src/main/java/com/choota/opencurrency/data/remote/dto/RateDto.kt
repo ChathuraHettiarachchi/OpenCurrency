@@ -540,9 +540,9 @@ data class Rates(
 /**
  * Convert rates to a list
  */
-fun Rates.asList(): List<Rate> {
+fun RateDto.asRateList(): List<Rate> {
     val gson = Gson()
-    val map: Map<*, *> = gson.fromJson(gson.toJson(this), MutableMap::class.java)
+    val map: Map<*, *> = gson.fromJson(gson.toJson(this.rates), MutableMap::class.java)
 
     val result: MutableList<Rate> = mutableListOf()
     map.forEach { (k, v) ->
