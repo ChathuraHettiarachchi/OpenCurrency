@@ -30,4 +30,8 @@ class CurrencyRepositoryImpl @Inject constructor(private val dao: CurrencyDao): 
     override suspend fun deleteCurrency(currency: Currency) {
         return dao.deleteCurrency(currency)
     }
+
+    override suspend fun countByCode(code: String): Long {
+        return dao.countByCode(code)
+    }
 }

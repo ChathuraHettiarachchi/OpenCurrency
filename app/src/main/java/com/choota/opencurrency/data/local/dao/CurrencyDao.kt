@@ -24,4 +24,7 @@ interface CurrencyDao {
 
     @Delete
     suspend fun deleteCurrency(currency: Currency)
+
+    @Query("SELECT COUNT(*) FROM Currency WHERE code = :code")
+    suspend fun countByCode(code: String): Long
 }

@@ -10,4 +10,5 @@ interface CurrencyRepository {
     suspend fun insertCurrency(currency: Currency): Long
     suspend fun updateCurrency(currency: Currency)
     suspend fun deleteCurrency(currency: Currency)
+    suspend fun countByCode(code: String): Long
 }

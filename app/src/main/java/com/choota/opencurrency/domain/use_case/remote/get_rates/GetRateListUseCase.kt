@@ -15,8 +15,9 @@ class GetRateListUseCase @Inject constructor(private val repository: OpenCurrenc
     operator fun invoke(): Flow<Resource<List<Rate>>> = flow {
         try {
             emit(Resource.Loading<List<Rate>>())
-            val data = repository.getRates().asRateList()
-            emit(Resource.Success<List<Rate>>(data))
+            val data = repository.getRates()
+            val list = data.asRateList()
+            emit(Resource.Success<List<Rate>>(list))
         } catch (e: HttpException) {
             emit(
                 Resource.Error<List<Rate>>(

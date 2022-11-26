@@ -8,6 +8,11 @@ class InsertCurrencyUseCase @Inject constructor(
     private val repository: CurrencyRepository
 ) {
     suspend operator fun invoke(currency: Currency): Long{
-        return repository.insertCurrency(currency)
+        return if(repository.countByCode(currency.code) > 0){
+            repository.updateCurrency(currency)
+            1
+        } else {
+            repository.insertCurrency(currency)
+        }
     }
 }
