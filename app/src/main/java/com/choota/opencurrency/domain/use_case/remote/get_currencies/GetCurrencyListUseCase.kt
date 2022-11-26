@@ -1,10 +1,8 @@
 package com.choota.opencurrency.domain.use_case.remote.get_currencies
 
 import com.choota.opencurrency.data.remote.dto.asList
-import com.choota.opencurrency.data.remote.dto.asRateList
 import com.choota.opencurrency.domain.model.Currency
-import com.choota.opencurrency.domain.model.Rate
-import com.choota.opencurrency.domain.repository.OpenCurrencyRepository
+import com.choota.opencurrency.domain.repository.remote.OpenCurrencyRepository
 import com.choota.opencurrency.utils.Resource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow

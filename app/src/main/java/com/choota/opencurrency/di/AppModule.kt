@@ -1,9 +1,13 @@
 package com.choota.opencurrency.di
 
+import android.app.Application
+import androidx.room.Room
 import com.choota.opencurrency.common.Constants.BASE_URL
+import com.choota.opencurrency.common.Constants.DATABASE
+import com.choota.opencurrency.data.local.OpenCurrencyDatabase
 import com.choota.opencurrency.data.remote.OpenCurrencyAPI
 import com.choota.opencurrency.data.repository.remote.OpenCurrencyRepositoryImpl
-import com.choota.opencurrency.domain.repository.OpenCurrencyRepository
+import com.choota.opencurrency.domain.repository.remote.OpenCurrencyRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -61,4 +65,24 @@ object AppModule {
     fun providesRepository(api: OpenCurrencyAPI): OpenCurrencyRepository {
         return OpenCurrencyRepositoryImpl(api)
     }
+
+    /**
+     * Provides db for the application
+     */
+    @Provides
+    @Singleton
+    fun providesDatabase(app: Application) = Room.databaseBuilder(
+        app,
+        OpenCurrencyDatabase::class.java,
+        DATABASE
+    ).build()
+
+    /**
+     * Provides ResourceVideo repo for access
+     */
+//    @Provides
+//    @Singleton
+//    fun providesCurrencyRepo(db: OpenCurrencyDatabase): ResourceVideoRepository {
+//        return ResourceVideoRepositoryImpl(db.resourceVideoDao)
+//    }
 }

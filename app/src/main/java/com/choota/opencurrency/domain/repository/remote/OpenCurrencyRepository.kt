@@ -1,4 +1,4 @@
-package com.choota.opencurrency.domain.repository
+package com.choota.opencurrency.domain.repository.remote
 
 import com.choota.opencurrency.data.remote.dto.CurrencyDto
 import com.choota.opencurrency.data.remote.dto.RateDto
