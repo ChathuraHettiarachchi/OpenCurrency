@@ -15,8 +15,9 @@ class GetCurrencyListUseCase @Inject constructor(private val repository: OpenCur
     operator fun invoke(): Flow<Resource<List<Currency>>> = flow {
         try {
             emit(Resource.Loading<List<Currency>>())
-            val data = repository.getCurrencies().asList()
-            emit(Resource.Success<List<Currency>>(data))
+            val data = repository.getCurrencies()
+            val list = data.asList()
+            emit(Resource.Success<List<Currency>>(list))
         } catch (e: HttpException) {
             emit(
                 Resource.Error<List<Currency>>(

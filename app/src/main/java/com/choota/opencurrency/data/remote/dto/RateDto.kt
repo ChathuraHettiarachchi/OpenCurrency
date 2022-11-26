@@ -1,5 +1,6 @@
 package com.choota.opencurrency.data.remote.dto
 
+
 import com.choota.opencurrency.domain.model.Rate
 import com.google.gson.Gson
 import com.google.gson.annotations.SerializedName
@@ -542,10 +543,11 @@ data class Rates(
  */
 fun RateDto.asRateList(): List<Rate> {
     val gson = Gson()
-    val map: Map<*, *> = gson.fromJson(gson.toJson(this.rates), MutableMap::class.java)
+    val map: MutableMap<*, *>? = gson.fromJson(gson.toJson(this.rates), MutableMap::class.java)
+
 
     val result: MutableList<Rate> = mutableListOf()
-    map.forEach { (k, v) ->
+    map!!.forEach { (k, v) ->
         result.add(
             Rate(
                 (k as String).uppercase(),
