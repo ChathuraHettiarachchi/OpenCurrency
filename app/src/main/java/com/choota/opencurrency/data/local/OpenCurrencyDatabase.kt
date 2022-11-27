@@ -7,7 +7,7 @@ import com.choota.opencurrency.domain.model.Currency
 
 @Database(
     entities = [Currency::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class OpenCurrencyDatabase: RoomDatabase() {

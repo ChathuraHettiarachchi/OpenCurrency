@@ -11,4 +11,9 @@
 
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
     </style>
+
+    <style name="AppCompatAlertDialogStyle" parent="android:Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+    </style>
 </resources>
