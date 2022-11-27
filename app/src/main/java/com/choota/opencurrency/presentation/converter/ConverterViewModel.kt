@@ -14,12 +14,10 @@ import com.choota.opencurrency.domain.use_case.remote.get_currencies.GetCurrency
 import com.choota.opencurrency.domain.use_case.remote.get_rates.GetRateListUseCase
 import com.choota.opencurrency.utils.AppDefault
 import com.choota.opencurrency.utils.Resource
+import com.choota.opencurrency.utils.reCalculate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.launchIn
-import kotlinx.coroutines.flow.onEach
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.*
 import javax.inject.Inject
@@ -99,12 +97,14 @@ class ConverterViewModel @Inject constructor(
                         var flag: Int? = null
                         var symbol: String = ""
                         try {
-                            val country = _countries.last { it.currency.code.lowercase() == filtered.first().code.lowercase() }
-                            if(country != null && country.currency != null){
+                            val country =
+                                _countries.last { it.currency.code.lowercase() == filtered.first().code.lowercase() }
+                            if (country != null && country.currency != null) {
                                 flag = country.flagResource
                                 symbol = country.currency.symbol
                             }
-                        } catch (ignored: Exception){}
+                        } catch (ignored: Exception) {
+                        }
 
                         localInsertCurrencyUseCase(
                             Currency(
@@ -126,5 +126,14 @@ class ConverterViewModel @Inject constructor(
                 }
             }
         }.launchIn(viewModelScope)
+    }
+
+    fun reCalculateCurrencyPairs(selectedCode: String, amount: Double) {
+        _countriesState.value =
+            _countries.last { it.currency.code.lowercase() == selectedCode.lowercase() }
+
+        _currencyState.value = CurrencyDataState(isLoading = true)
+        _currencyState.value =
+            CurrencyDataState(isLoading = false, currencies.reCalculate(selectedCode, amount))
     }
 }

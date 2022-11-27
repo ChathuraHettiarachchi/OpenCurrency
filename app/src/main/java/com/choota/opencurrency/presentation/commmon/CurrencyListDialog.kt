@@ -14,7 +14,7 @@ import com.choota.opencurrency.utils.round2Decimal
 import com.google.android.material.button.MaterialButton
 import me.abhinay.input.CurrencyEditText
 
-object CurrencyListDialog {
+class CurrencyListDialog {
     lateinit var dialog: Dialog
     lateinit var selection: String
 
@@ -35,8 +35,8 @@ object CurrencyListDialog {
         ((dialog).findViewById<MaterialButton>(R.id.btnClose)).setOnClickListener { dialog.dismiss() }
         ((dialog).findViewById<MaterialButton>(R.id.btnSet)).setOnClickListener {
             val amount = ((dialog).findViewById<CurrencyEditText>(R.id.edtAmount)).cleanDoubleValue
-            completion(amount, selection)
             dialog.dismiss()
+            completion(amount, selection)
         }
 
         dialog.setCanceledOnTouchOutside(false)

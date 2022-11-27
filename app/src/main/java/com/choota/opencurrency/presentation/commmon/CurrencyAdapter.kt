@@ -12,10 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.blongho.country_data.Country
 import com.choota.opencurrency.R
 import com.choota.opencurrency.domain.model.Currency
-import com.choota.opencurrency.presentation.commmon.CurrencyListDialog.selection
-import com.choota.opencurrency.utils.round2Decimal
-import de.hdodenhof.circleimageview.CircleImageView
-import me.abhinay.input.CurrencyEditText
 
 class CurrencyAdapter(
     context: Context,
