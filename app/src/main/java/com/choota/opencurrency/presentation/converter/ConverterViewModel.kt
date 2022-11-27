@@ -35,6 +35,7 @@ class ConverterViewModel @Inject constructor(
     // mutable state for api/db response
     private val _currencyState = MutableStateFlow<CurrencyDataState>(CurrencyDataState())
     val currencyState: StateFlow<CurrencyDataState> = _currencyState
+    lateinit var currencies: List<Currency>
 
     // mutable state for api/db response
     private val _countries = World.getAllCountries()
@@ -71,6 +72,7 @@ class ConverterViewModel @Inject constructor(
             _currencyState.value = CurrencyDataState(isLoading = true)
             viewModelScope.launch(Dispatchers.IO) {
                 localCurrencyUseCase().collect {
+                    currencies = it
                     _currencyState.value = CurrencyDataState(isLoading = false, data = it)
                 }
             }
@@ -118,6 +120,7 @@ class ConverterViewModel @Inject constructor(
                     AppDefault.lastSyncTime = Date().time
 
                     localCurrencyUseCase().collect {
+                        currencies = it
                         _currencyState.value = CurrencyDataState(isLoading = false, data = it)
                     }
                 }

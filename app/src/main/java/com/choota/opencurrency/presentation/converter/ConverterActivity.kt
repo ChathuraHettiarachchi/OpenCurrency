@@ -10,6 +10,7 @@ import com.blongho.country_data.Country
 import com.blongho.country_data.World
 import com.choota.opencurrency.databinding.ActivityConverterBinding
 import com.choota.opencurrency.domain.model.Currency
+import com.choota.opencurrency.presentation.commmon.CurrencyListDialog
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
@@ -24,7 +25,7 @@ class ConverterActivity : AppCompatActivity() {
     private var _binding: ActivityConverterBinding? = null
     private val binding get() = _binding!!
     private val viewModel: ConverterViewModel by viewModels()
-    private lateinit var countries: List<Country>
+    private var selectedCurrency: String = "usd"
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,7 +36,7 @@ class ConverterActivity : AppCompatActivity() {
     }
 
     private fun initUI() {
-        lifecycleScope.launch(Dispatchers.Main){
+        lifecycleScope.launch(Dispatchers.Main) {
             viewModel.currentCountryState.collect {
                 binding.imgFlag.setImageResource(it.flagResource)
                 binding.edtAmount.setCurrency(it.currency?.symbol)
@@ -43,13 +44,14 @@ class ConverterActivity : AppCompatActivity() {
             }
         }
 
-        lifecycleScope.launch(Dispatchers.Main){
+        lifecycleScope.launch(Dispatchers.Main) {
             viewModel.currencyState.collect {
-                if(it.isLoading){
+                if (it.isLoading) {
                     Toast.makeText(this@ConverterActivity, "Loading", Toast.LENGTH_LONG).show()
                 } else {
-                    if(it.error.isEmpty() && it.data.isNotEmpty()){
-                        Toast.makeText(this@ConverterActivity, "Data found", Toast.LENGTH_LONG).show()
+                    if (it.error.isEmpty() && it.data.isNotEmpty()) {
+                        Toast.makeText(this@ConverterActivity, "Data found", Toast.LENGTH_LONG)
+                            .show()
                     } else {
                         Toast.makeText(this@ConverterActivity, "Error", Toast.LENGTH_LONG).show()
                     }
@@ -59,6 +61,13 @@ class ConverterActivity : AppCompatActivity() {
                     layoutManager = LinearLayoutManager(this@ConverterActivity)
                     adapter = ConverterCurrencyAdapter(this@ConverterActivity, it.data)
                 }
+            }
+        }
+
+        binding.edtAmount.setOnClickListener {
+            CurrencyListDialog.show(this, viewModel.currencies, selectedCurrency) { amount, code ->
+                selectedCurrency = code
+                Toast.makeText(this, "$amount $code", Toast.LENGTH_LONG).show()
             }
         }
     }
