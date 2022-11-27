@@ -25,7 +25,9 @@ class ConverterActivity : AppCompatActivity() {
     private var _binding: ActivityConverterBinding? = null
     private val binding get() = _binding!!
     private val viewModel: ConverterViewModel by viewModels()
+
     private var selectedCurrency: String = "usd"
+    private var selectedAmount: Double = 1.00
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,27 +49,21 @@ class ConverterActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.Main) {
             viewModel.currencyState.collect {
                 if (it.isLoading) {
-                    Toast.makeText(this@ConverterActivity, "Loading", Toast.LENGTH_LONG).show()
+                    //Toast.makeText(this@ConverterActivity, "Loading", Toast.LENGTH_LONG).show()
                 } else {
-                    if (it.error.isEmpty() && it.data.isNotEmpty()) {
-                        Toast.makeText(this@ConverterActivity, "Data found", Toast.LENGTH_LONG)
-                            .show()
-                    } else {
-                        Toast.makeText(this@ConverterActivity, "Error", Toast.LENGTH_LONG).show()
+                    binding.recyclerViewCurrency.apply {
+                        setHasFixedSize(true)
+                        layoutManager = LinearLayoutManager(this@ConverterActivity)
+                        adapter = ConverterCurrencyAdapter(this@ConverterActivity, it.data)
                     }
-                }
-                binding.recyclerViewCurrency.apply {
-                    setHasFixedSize(true)
-                    layoutManager = LinearLayoutManager(this@ConverterActivity)
-                    adapter = ConverterCurrencyAdapter(this@ConverterActivity, it.data)
                 }
             }
         }
 
         binding.edtAmount.setOnClickListener {
-            CurrencyListDialog.show(this, viewModel.currencies, selectedCurrency) { amount, code ->
+            CurrencyListDialog.show(this, viewModel.currencies, selectedCurrency, selectedAmount) { amount, code ->
                 selectedCurrency = code
-                Toast.makeText(this, "$amount $code", Toast.LENGTH_LONG).show()
+                selectedAmount = amount
             }
         }
     }

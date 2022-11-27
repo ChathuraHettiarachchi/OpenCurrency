@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.choota.opencurrency.R
 import com.choota.opencurrency.domain.model.Currency
+import com.choota.opencurrency.utils.round2Decimal
 import com.google.android.material.button.MaterialButton
 import me.abhinay.input.CurrencyEditText
 
@@ -17,7 +18,7 @@ object CurrencyListDialog {
     lateinit var dialog: Dialog
     lateinit var selection: String
 
-    fun show(context: Context, currencies: List<Currency>, selectedCode: String, completion: (Double, String) -> Unit){
+    fun show(context: Context, currencies: List<Currency>, selectedCode: String, selectedAmount: Double, completion: (Double, String) -> Unit){
         selection = selectedCode
         dialog = Dialog(context, R.style.AppCompatAlertDialogStyle)
         dialog.setContentView(R.layout.dialog_currency_selector)
@@ -30,6 +31,7 @@ object CurrencyListDialog {
             }
         }
 
+        ((dialog).findViewById<CurrencyEditText>(R.id.edtAmount)).setText(selectedAmount.round2Decimal())
         ((dialog).findViewById<MaterialButton>(R.id.btnClose)).setOnClickListener { dialog.dismiss() }
         ((dialog).findViewById<MaterialButton>(R.id.btnSet)).setOnClickListener {
             val amount = ((dialog).findViewById<CurrencyEditText>(R.id.edtAmount)).cleanDoubleValue

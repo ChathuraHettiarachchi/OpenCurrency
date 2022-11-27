@@ -31,6 +31,7 @@
             android:inputType="number"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
+            android:text="0.00"
             android:textColor="@color/black"
             android:textSize="24sp"/>
 
