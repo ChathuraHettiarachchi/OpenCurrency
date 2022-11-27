@@ -2,6 +2,8 @@ package com.choota.opencurrency.presentation.converter
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.blongho.country_data.Country
+import com.blongho.country_data.World
 import com.choota.opencurrency.common.Constants.SYNC_PERIOD
 import com.choota.opencurrency.domain.model.Currency
 import com.choota.opencurrency.domain.model.Rate
@@ -34,8 +36,14 @@ class ConverterViewModel @Inject constructor(
     private val _currencyState = MutableStateFlow<CurrencyDataState>(CurrencyDataState())
     val currencyState: StateFlow<CurrencyDataState> = _currencyState
 
+    // mutable state for api/db response
+    private val _countries = World.getAllCountries()
+    private val _countriesState = MutableStateFlow<Country>(_countries[0])
+    val currentCountryState: StateFlow<Country> = _countriesState
+
     init {
         getCurrencyList()
+        _countriesState.value = _countries.last { it.currency.code.lowercase() == "usd" }
     }
 
     private fun getCurrencyList() {
@@ -85,12 +93,25 @@ class ConverterViewModel @Inject constructor(
                 is Resource.Success -> {
                     rates!!.forEach { rate ->
                         val filtered = res.data!!.filter { currency -> currency.code == rate.code }
+
+                        var flag: Int? = null
+                        var symbol: String = ""
+                        try {
+                            val country = _countries.last { it.currency.code.lowercase() == filtered.first().code.lowercase() }
+                            if(country != null && country.currency != null){
+                                flag = country.flagResource
+                                symbol = country.currency.symbol
+                            }
+                        } catch (ignored: Exception){}
+
                         localInsertCurrencyUseCase(
                             Currency(
                                 0,
                                 filtered.first().code,
                                 filtered.first().name,
-                                rate.rate
+                                rate.rate,
+                                flag,
+                                symbol
                             )
                         )
                     }

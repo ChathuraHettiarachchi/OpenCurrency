@@ -8,8 +8,9 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/imgFlag"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_centerVertical="true"
         android:src="@drawable/placeholder_flag"
         app:civ_border_width="2dp"
         app:civ_border_color="#FF000000"/>
@@ -30,7 +31,7 @@
             android:layout_marginStart="8dp"
             android:inputType="number"
             android:textColor="@color/black"
-            android:textSize="24sp"
+            android:textSize="18sp"
             android:text="0"
             android:textStyle="bold"/>
 

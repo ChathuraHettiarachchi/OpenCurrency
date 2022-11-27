@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.blongho.country_data.Country
 import com.blongho.country_data.World
 import com.choota.opencurrency.databinding.ActivityConverterBinding
@@ -31,25 +32,34 @@ class ConverterActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initUI()
-        lifecycleScope.launch(Dispatchers.Main){
-            viewModel.currencyState.collectLatest{
-
-            }
-        }
-
-        binding.edtAmount.setOnClickListener {
-            // trigger popup
-        }
     }
 
     private fun initUI() {
-        countries = World.getAllCountries()
-        val defCountry = countries.last { it.currency.code.lowercase() == "usd" }
-
-        defCountry.flagResource.let {
-            binding.imgFlag.setImageResource(it)
+        lifecycleScope.launch(Dispatchers.Main){
+            viewModel.currentCountryState.collect {
+                binding.imgFlag.setImageResource(it.flagResource)
+                binding.edtAmount.setCurrency(it.currency?.symbol)
+                binding.edtAmount.setText("1.00")
+            }
         }
-        binding.edtAmount.setCurrency(defCountry?.currency?.symbol)
-        binding.edtAmount.setText("0")
+
+        lifecycleScope.launch(Dispatchers.Main){
+            viewModel.currencyState.collect {
+                if(it.isLoading){
+                    Toast.makeText(this@ConverterActivity, "Loading", Toast.LENGTH_LONG).show()
+                } else {
+                    if(it.error.isEmpty() && it.data.isNotEmpty()){
+                        Toast.makeText(this@ConverterActivity, "Data found", Toast.LENGTH_LONG).show()
+                    } else {
+                        Toast.makeText(this@ConverterActivity, "Error", Toast.LENGTH_LONG).show()
+                    }
+                }
+                binding.recyclerViewCurrency.apply {
+                    setHasFixedSize(true)
+                    layoutManager = LinearLayoutManager(this@ConverterActivity)
+                    adapter = ConverterCurrencyAdapter(this@ConverterActivity, it.data)
+                }
+            }
+        }
     }
 }
