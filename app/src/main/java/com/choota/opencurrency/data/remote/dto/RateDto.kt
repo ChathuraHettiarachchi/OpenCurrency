@@ -19,7 +19,7 @@ data class RateDto(
     val disclaimer: String? = null,
 
     @field:SerializedName("timestamp")
-    val timestamp: Int? = null,
+    val timestamp: Double? = null,
 
     @field:SerializedName("base")
     val base: String? = null
@@ -43,10 +43,10 @@ data class Rates(
     val sCR: Double? = null,
 
     @field:SerializedName("CDF")
-    val cDF: Int? = null,
+    val cDF: Double? = null,
 
     @field:SerializedName("BBD")
-    val bBD: Int? = null,
+    val bBD: Double? = null,
 
     @field:SerializedName("GTQ")
     val gTQ: Double? = null,
@@ -70,13 +70,13 @@ data class Rates(
     val sTN: Double? = null,
 
     @field:SerializedName("CUC")
-    val cUC: Int? = null,
+    val cUC: Double? = null,
 
     @field:SerializedName("BSD")
-    val bSD: Int? = null,
+    val bSD: Double? = null,
 
     @field:SerializedName("SLL")
-    val sLL: Int? = null,
+    val sLL: Double? = null,
 
     @field:SerializedName("SDG")
     val sDG: Double? = null,
@@ -154,10 +154,10 @@ data class Rates(
     val uAH: Double? = null,
 
     @field:SerializedName("GNF")
-    val gNF: Int? = null,
+    val gNF: Double? = null,
 
     @field:SerializedName("ERN")
-    val eRN: Int? = null,
+    val eRN: Double? = null,
 
     @field:SerializedName("MZN")
     val mZN: Double? = null,
@@ -172,7 +172,7 @@ data class Rates(
     val qAR: Double? = null,
 
     @field:SerializedName("IRR")
-    val iRR: Int? = null,
+    val iRR: Double? = null,
 
     @field:SerializedName("XPD")
     val xPD: Double? = null,
@@ -184,7 +184,7 @@ data class Rates(
     val tHB: Double? = null,
 
     @field:SerializedName("UZS")
-    val uZS: Int? = null,
+    val uZS: Double? = null,
 
     @field:SerializedName("XPF")
     val xPF: Double? = null,
@@ -199,7 +199,7 @@ data class Rates(
     val lYD: Double? = null,
 
     @field:SerializedName("BMD")
-    val bMD: Int? = null,
+    val bMD: Double? = null,
 
     @field:SerializedName("KWD")
     val kWD: Double? = null,
@@ -229,13 +229,13 @@ data class Rates(
     val mKD: Double? = null,
 
     @field:SerializedName("USD")
-    val uSD: Int? = null,
+    val uSD: Double? = null,
 
     @field:SerializedName("DZD")
     val dZD: Double? = null,
 
     @field:SerializedName("PAB")
-    val pAB: Int? = null,
+    val pAB: Double? = null,
 
     @field:SerializedName("GGP")
     val gGP: Double? = null,
@@ -244,7 +244,7 @@ data class Rates(
     val sGD: Double? = null,
 
     @field:SerializedName("ETB")
-    val eTB: Int? = null,
+    val eTB: Double? = null,
 
     @field:SerializedName("JEP")
     val jEP: Double? = null,
@@ -259,7 +259,7 @@ data class Rates(
     val vUV: Double? = null,
 
     @field:SerializedName("LAK")
-    val lAK: Int? = null,
+    val lAK: Double? = null,
 
     @field:SerializedName("BND")
     val bND: Double? = null,
@@ -292,7 +292,7 @@ data class Rates(
     val zMW: Double? = null,
 
     @field:SerializedName("TZS")
-    val tZS: Int? = null,
+    val tZS: Double? = null,
 
     @field:SerializedName("VND")
     val vND: Double? = null,
@@ -313,7 +313,7 @@ data class Rates(
     val gYD: Double? = null,
 
     @field:SerializedName("KPW")
-    val kPW: Int? = null,
+    val kPW: Double? = null,
 
     @field:SerializedName("BOB")
     val bOB: Double? = null,
@@ -358,7 +358,7 @@ data class Rates(
     val hKD: Double? = null,
 
     @field:SerializedName("RWF")
-    val rWF: Int? = null,
+    val rWF: Double? = null,
 
     @field:SerializedName("EUR")
     val eUR: Double? = null,
@@ -391,7 +391,7 @@ data class Rates(
     val iMP: Double? = null,
 
     @field:SerializedName("ZWL")
-    val zWL: Int? = null,
+    val zWL: Double? = null,
 
     @field:SerializedName("GIP")
     val gIP: Double? = null,
@@ -487,13 +487,13 @@ data class Rates(
     val hUF: Double? = null,
 
     @field:SerializedName("BIF")
-    val bIF: Int? = null,
+    val bIF: Double? = null,
 
     @field:SerializedName("MWK")
-    val mWK: Int? = null,
+    val mWK: Double? = null,
 
     @field:SerializedName("MGA")
-    val mGA: Int? = null,
+    val mGA: Double? = null,
 
     @field:SerializedName("XDR")
     val xDR: Double? = null,
@@ -517,7 +517,7 @@ data class Rates(
     val sSP: Double? = null,
 
     @field:SerializedName("NIO")
-    val nIO: Int? = null,
+    val nIO: Double? = null,
 
     @field:SerializedName("PEN")
     val pEN: Double? = null,
