@@ -15,6 +15,9 @@ import com.google.common.truth.Truth.assertThat
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.StandardTestDispatcher
+import kotlinx.coroutines.test.advanceTimeBy
+import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -35,6 +38,8 @@ class ConverterViewModelTest {
 
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
+
+    val dispatcher = StandardTestDispatcher()
 
     @Before
     fun setup() {
@@ -91,20 +96,22 @@ class ConverterViewModelTest {
     }
 
     @Test
-    fun `success on getCurrencies and currency is attached with flag, rates`() = runBlocking {
-        useCurrencyCaseSuccess.invoke().test {
-            val emitLoading = awaitItem()
-            assertThat(emitLoading).isInstanceOf(Resource.Loading::class.java)
+    fun `success on getCurrencies and currency is attached with code`() = runTest {
+        useCurrencyCaseSuccess().test {
+            val emitLoading1 = awaitItem()
+            assertThat(emitLoading1).isInstanceOf(Resource.Loading::class.java)
+            assertThat(viewModelSuccess.currencyState.value.isLoading).isTrue()
 
-            val emitSuccess = awaitItem()
-            assertThat(emitSuccess).isInstanceOf(Resource.Success::class.java)
-            assertThat(!viewModelSuccess.currencyState.value.isLoading).isTrue()
+            dispatcher.scheduler.advanceUntilIdle()
+
+            val emitSuccess1 = awaitItem()
+            assertThat(emitSuccess1).isInstanceOf(Resource.Success::class.java)
+            assertThat(emitSuccess1.data?.isNotEmpty()).isTrue()
+            assertThat(emitSuccess1.data!![0].code.isNotEmpty()).isTrue()
+
+            dispatcher.scheduler.advanceUntilIdle()
 
             awaitComplete()
-
-            assertThat(viewModelSuccess.currencyState.value.data.isNotEmpty()).isTrue()
-            assertThat(viewModelSuccess.currencyState.value.data[0].code.isNotEmpty()).isTrue()
-            assertThat(viewModelSuccess.currencyState.value.data[0].flag!! > 0).isTrue()
         }
     }
 }

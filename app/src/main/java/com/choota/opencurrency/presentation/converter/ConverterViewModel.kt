@@ -71,6 +71,7 @@ class ConverterViewModel @Inject constructor(
                     is Resource.Success -> {
                         getRemoteCurrencies(res.data)
                     }
+                    else -> {}
                 }
             }.launchIn(viewModelScope)
         } else {
@@ -131,6 +132,7 @@ class ConverterViewModel @Inject constructor(
                         _currencyState.value = CurrencyDataState(isLoading = false, data = it)
                     }
                 }
+                else -> {}
             }
         }.launchIn(viewModelScope)
     }
