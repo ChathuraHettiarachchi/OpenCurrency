@@ -3,6 +3,7 @@ package com.choota.opencurrency.presentation.converter
 import android.app.ProgressDialog.show
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -42,7 +43,7 @@ class ConverterActivity : AppCompatActivity() {
     private fun initUI() {
         lifecycleScope.launch(Dispatchers.Main) {
             viewModel.currentCountryState.collectLatest {
-                binding.imgFlag.setImageResource(it.flagResource)
+                binding.imgFlag.setImageResource(it?.flagResource!!)
                 binding.edtAmount.setCurrency(it.currency?.symbol)
                 binding.edtAmount.setText(selectedAmount.round2Decimal())
             }
@@ -51,8 +52,9 @@ class ConverterActivity : AppCompatActivity() {
         lifecycleScope.launch(Dispatchers.Main) {
             viewModel.currencyState.collectLatest {
                 if (it.isLoading) {
-                    //Toast.makeText(this@ConverterActivity, "Loading", Toast.LENGTH_LONG).show()
+                    binding.layProgress.visibility = View.VISIBLE
                 } else {
+                    binding.layProgress.visibility = View.GONE
                     binding.recyclerViewCurrency.apply {
                         setHasFixedSize(true)
                         layoutManager = LinearLayoutManager(this@ConverterActivity)
@@ -73,6 +75,7 @@ class ConverterActivity : AppCompatActivity() {
     }
 
     private fun triggerRecalculate() {
+        binding.layProgress.visibility = View.VISIBLE
         binding.edtAmount.setText(selectedAmount.round2Decimal())
         viewModel.reCalculateCurrencyPairs(selectedCurrency, selectedAmount)
         binding.recyclerViewCurrency.apply {
@@ -80,6 +83,7 @@ class ConverterActivity : AppCompatActivity() {
             layoutManager = LinearLayoutManager(this@ConverterActivity)
             adapter = ConverterCurrencyAdapter(this@ConverterActivity, viewModel.currencyState.value.data, !isDataAltered())
         }
+        binding.layProgress.visibility = View.GONE
     }
 
     private fun isDataAltered(): Boolean {

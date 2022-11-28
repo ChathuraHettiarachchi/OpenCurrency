@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.blongho.country_data.Country
 import com.blongho.country_data.World
+import com.choota.opencurrency.common.Constants
 import com.choota.opencurrency.common.Constants.SYNC_PERIOD
 import com.choota.opencurrency.domain.model.Currency
 import com.choota.opencurrency.domain.model.Rate
@@ -36,17 +37,24 @@ class ConverterViewModel @Inject constructor(
     lateinit var currencies: List<Currency>
 
     // mutable state for api/db response
-    private val _countries = World.getAllCountries()
-    private val _countriesState = MutableStateFlow<Country>(_countries[0])
-    val currentCountryState: StateFlow<Country> = _countriesState
+    private val _countries =
+        if (Constants.isTestMode()) emptyList<Country>() else World.getAllCountries()
+    private val _countriesState =
+        MutableStateFlow<Country?>(if (_countries.isNotEmpty()) _countries[0] else null)
+    val currentCountryState: StateFlow<Country?> = _countriesState
 
     init {
         getCurrencyList()
-        _countriesState.value = _countries.last { it.currency.code.lowercase() == "usd" }
+        _countriesState.value =
+            if (_countries.isNotEmpty()) _countries.last { it.currency.code.lowercase() == "usd" } else null
     }
 
     private fun getCurrencyList() {
-        val isExpired = (Date().time - AppDefault.lastSyncTime) > SYNC_PERIOD
+        val isExpired = if (!Constants.isTestMode())
+            (Date().time - AppDefault.lastSyncTime) > SYNC_PERIOD
+        else
+            true
+
         if (isExpired) {
             // call remote if network is present
             remoteRatesUseCase().onEach { res ->
@@ -63,6 +71,7 @@ class ConverterViewModel @Inject constructor(
                     is Resource.Success -> {
                         getRemoteCurrencies(res.data)
                     }
+                    else -> {}
                 }
             }.launchIn(viewModelScope)
         } else {
@@ -97,8 +106,7 @@ class ConverterViewModel @Inject constructor(
                         var flag: Int? = null
                         var symbol: String = ""
                         try {
-                            val country =
-                                _countries.last { it.currency.code.lowercase() == filtered.first().code.lowercase() }
+                            val country = resolveCountry(filtered.first().code)
                             if (country != null && country.currency != null) {
                                 flag = country.flagResource
                                 symbol = country.currency.symbol
@@ -117,15 +125,24 @@ class ConverterViewModel @Inject constructor(
                             )
                         )
                     }
-                    AppDefault.lastSyncTime = Date().time
+                    if (!Constants.isTestMode()) AppDefault.lastSyncTime = Date().time
 
                     localCurrencyUseCase().collect {
                         currencies = it
                         _currencyState.value = CurrencyDataState(isLoading = false, data = it)
                     }
                 }
+                else -> {}
             }
         }.launchIn(viewModelScope)
+    }
+
+    private fun resolveCountry(filterCode: String): Country? {
+        return if (!Constants.isTestMode()) {
+            _countries.last { it.currency.code.lowercase() == filterCode.lowercase() }
+        } else {
+            null
+        }
     }
 
     fun reCalculateCurrencyPairs(selectedCode: String, amount: Double) {
