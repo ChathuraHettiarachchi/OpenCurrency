@@ -43,7 +43,7 @@ class ConverterActivity : AppCompatActivity() {
     private fun initUI() {
         lifecycleScope.launch(Dispatchers.Main) {
             viewModel.currentCountryState.collectLatest {
-                binding.imgFlag.setImageResource(it.flagResource)
+                binding.imgFlag.setImageResource(it?.flagResource!!)
                 binding.edtAmount.setCurrency(it.currency?.symbol)
                 binding.edtAmount.setText(selectedAmount.round2Decimal())
             }
